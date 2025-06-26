@@ -1,0 +1,28 @@
+# k8s-apps/dev/httpd.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fof-jack-demo-dev-httpd
+  namespace: argocd
+spec:
+  project: fof-jack-demo
+  source:
+    repoURL: 'https://github.com/jacksgt/app-of-apps-demo.git'
+    path: charts/httpd
+    targetRevision: HEAD
+    helm:
+      # Environment-specific overrides
+      values: |
+        replicaCount: 1
+        image:
+          repository: image-registry.openshift-image-registry.svc:5000/openshift/httpd
+          tag: "latest"
+        service:
+          type: ClusterIP
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: fof-jack-demo-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

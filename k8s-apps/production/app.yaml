@@ -1,0 +1,26 @@
+# k8s-apps/production/app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fof-jack-demo-production-app
+  namespace: argocd
+spec:
+  project: fof-jack-demo
+  source:
+    repoURL: 'https://github.com/jacksgt/app-of-apps-demo.git'
+    path: charts/app
+    targetRevision: main # For production, it is best to use a Git tag (e.g., 'v1.0.0')
+    helm:
+      # Environment-specific overrides for production
+      values: |
+        replicaCount: 3
+        image:
+          repository: traefik/whoami
+          tag: "v1.11.0" # Use a specific, stable tag for production
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: fof-jack-demo-production
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
