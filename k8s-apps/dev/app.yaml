@@ -3,7 +3,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: fof-jack-demo-dev-app
-  namespace: argocd
+  namespace: fof-demo-dev
 spec:
   project: fof-jack-demo
   source:
