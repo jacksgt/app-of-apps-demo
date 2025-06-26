@@ -1,10 +1,10 @@
-# charts/app/templates/service.yaml
+# charts/httpd/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "app.fullname" . }}
+  name: {{ include "httpd.fullname" . }}
   labels:
-    {{- include "app.labels" . | nindent 4 }}
+    {{- include "httpd.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -13,4 +13,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "app.selectorLabels" . | nindent 4 }}
+    {{- include "httpd.selectorLabels" . | nindent 4 }}

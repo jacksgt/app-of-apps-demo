@@ -1,7 +1,7 @@
-# charts/httpd/Chart.yaml
+# charts/app/Chart.yaml
 apiVersion: v2
-name: httpd
-description: A Helm chart for deploying the Apache HTTP Server.
+name: app
+description: A Helm chart for deploying a generic application.
 type: application
 version: 0.1.0
-appVersion: "2.4"
+appVersion: "1.0.0"
