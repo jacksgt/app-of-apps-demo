@@ -1,22 +1,22 @@
-# k8s-apps/staging/app.yaml
+# k8s-apps/staging/httpd.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fof-jack-demo-staging
+  name: fof-jack-demo-staging-httpd
   namespace: openshift-gitops
 spec:
   project: fof-jack-demo
   source:
     repoURL: 'https://github.com/jacksgt/app-of-apps-demo.git'
-    path: charts/app
+    path: charts/httpd
     targetRevision: HEAD
     helm:
-      # Environment-specific overrides for staging
+      # Environment-specific overrides
       values: |
-        replicaCount: 2
+        replicaCount: 1
         image:
-          repository: docker.io/traefik/whoami
-          tag: "v1.11.0"
+          repository: image-registry.openshift-image-registry.svc:5000/openshift/httpd
+          tag: "2.4-ubi8"
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: fof-jack-demo-staging
