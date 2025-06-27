@@ -56,13 +56,13 @@ This structure allows you to manage your application deployments across multiple
 
 ## ArgoCD onboarding for applications
 
+*This step should be handled by the infrastructure team. The resources (namespaces, argo projects) should be managed via the global GitOps repository.*
+
 To onboard this repository to our Argo CD instance, we start off by creating the relevant namespaces.
 It is important that these have the `argocd.argoproj.io/managed-by=openshift-gitops` label.
 This label allows the Argo CD instance in the `openshift-gitops` namespace to manage resource in our application namespace.
 Below we create three namespaces: one for the development environment, one for the staging environment and one for the production environment.
 It is recommended to always split separate environments into individual projects (namespaces).
-
-This step is to be done by the infrastructure team and should be managed via the global GitOps repository.
 
 ```yaml
 ---
@@ -135,7 +135,9 @@ spec:
       - g, MY_ADMIN_GROUP, admin
 ```
 
+## Application setup
 
+*This step can be handled by the development autonomously. For private repositories, an authentication token may need to be provided to allow Argo CD to access the repository (see [ArgoCD documentation for private repositories](https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/)).*
 
 Now, the developers can deploy their "App-of-Apps" applications that will act as the "seed" for each environment:
 
@@ -205,3 +207,4 @@ Additional materials that are helpful to study:
 * https://github.com/redhat-developer/openshift-gitops-getting-started
 * https://advanceddevsecopsworkshop.github.io/workshop/modules/main/03-advanced-gitops.html
 * https://developers.redhat.com/blog/2025/03/05/openshift-gitops-recommended-practices
+* https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/

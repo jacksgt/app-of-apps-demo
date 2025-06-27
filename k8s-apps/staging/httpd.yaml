@@ -3,7 +3,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: fof-jack-demo-staging-httpd
-  namespace: openshift-gitops
+  namespace: fof-jack-demo-staging
 spec:
   project: fof-jack-demo
   source:
