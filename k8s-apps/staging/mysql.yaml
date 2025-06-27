@@ -2,18 +2,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fof-jack-demo-staging-app
+  name: fof-jack-demo-staging-mysql
   namespace: openshift-gitops
 spec:
   project: fof-jack-demo
   source:
     repoURL: 'https://github.com/jacksgt/app-of-apps-demo.git'
-    path: charts/app
+    path: charts/mysql
     targetRevision: HEAD
     helm:
       # Environment-specific overrides for staging
       values: |
-        replicaCount: 2
+        replicaCount: 1
         image:
           repository: docker.io/traefik/whoami
           tag: "v1.11.0"
