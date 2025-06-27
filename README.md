@@ -54,13 +54,15 @@ Explanation
 This structure allows you to manage your application deployments across multiple environments in a clear, organized, and version-controlled way. Changes to application manifests or configurations are made through Git commits, which ArgoCD then automatically syncs to the OpenShift clusters.
 
 
-## ArgoCD onboarding
+## ArgoCD onboarding for applications
 
 To onboard this repository to our Argo CD instance, we start off by creating the relevant namespaces.
 It is important that these have the `argocd.argoproj.io/managed-by=openshift-gitops` label.
 This label allows the Argo CD instance in the `openshift-gitops` namespace to manage resource in our application namespace.
 Below we create three namespaces: one for the development environment, one for the staging environment and one for the production environment.
 It is recommended to always split separate environments into individual projects (namespaces).
+
+This step is to be done by the infrastructure team and should be managed via the global GitOps repository.
 
 ```yaml
 ---
@@ -89,9 +91,9 @@ metadata:
 spec: {}
 ```
 
-and the Argo CD AppProject:
+as well as the Argo CD AppProject:
 
-```
+```yaml
 ---
 kind: AppProject
 apiVersion: argoproj.io/v1alpha1
@@ -124,7 +126,6 @@ spec:
     - fof-jack-demo-dev
     - fof-jack-demo-staging
     - fof-jack-demo-production
-    - openshift-gitops
     roles:
     - description: admin access to project
       groups:
@@ -134,23 +135,25 @@ spec:
       - g, MY_ADMIN_GROUP, admin
 ```
 
-Finally we deploy the "App-of-Apps" applications that will act as the "seed" for each environment:
+
+
+Now, the developers can deploy their "App-of-Apps" applications that will act as the "seed" for each environment:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fof-jack-demo-dev
-  namespace: openshift-gitops
+  name: app-of-apps
+  namespace: fof-jack-demo-dev
 spec:
-  project: default
+  project: fof-jack-demo
   source:
     repoURL: 'https://github.com/jacksgt/app-of-apps-demo.git'
     path: k8s-apps/dev
     targetRevision: HEAD
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: openshift-gitops
+    namespace: fof-jack-demo-dev
   syncPolicy:
     automated:
       prune: true
@@ -162,7 +165,7 @@ metadata:
   name: fof-jack-demo-staging
   namespace: openshift-gitops
 spec:
-  project: default
+  project: fof-jack-demo
   source:
     repoURL: 'https://github.com/jacksgt/app-of-apps-demo.git'
     path: k8s-apps/staging
@@ -181,7 +184,7 @@ metadata:
   name: fof-jack-demo-staging
   namespace: openshift-gitops
 spec:
-  project: default
+  project: fof-jack-demo
   source:
     repoURL: 'https://github.com/jacksgt/app-of-apps-demo.git'
     path: k8s-apps/production
