@@ -132,10 +132,13 @@ spec:
       - MY_ADMIN_GROUP
       name: admin
       policies:
-      - g, MY_ADMIN_GROUP, admin
+      - 'p, proj:fof-demo-jack:admin, applications, *, */fof-demo-jack-dev/*, allow'
+      - 'p, proj:fof-demo-jack:admin, applications, *, */fof-demo-jack-staging/*, allow'
+      - 'p, proj:fof-demo-jack:admin, applications, *, */fof-demo-jack-production/*, allow'
+      - 'p, proj:fof-demo-jack:admin, repositories, *, *, allow'
 ```
 
-## Application setup
+## application setup
 
 *This step can be handled by the development autonomously. For private repositories, an authentication token may need to be provided to allow Argo CD to access the repository (see [ArgoCD documentation for private repositories](https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/)).*
 
@@ -164,8 +167,8 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fof-jack-demo-staging
-  namespace: openshift-gitops
+  name: app-of-apps
+  namespace: fof-jack-demo-staging
 spec:
   project: fof-jack-demo
   source:
@@ -174,7 +177,7 @@ spec:
     targetRevision: HEAD
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: openshift-gitops
+    namespace: fof-jack-demo-staging
   syncPolicy:
     automated:
       prune: true
@@ -183,8 +186,8 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fof-jack-demo-staging
-  namespace: openshift-gitops
+  name: app-of-apps
+  namespace: fof-jack-demo-production
 spec:
   project: fof-jack-demo
   source:
@@ -193,7 +196,7 @@ spec:
     targetRevision: HEAD
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: openshift-gitops
+    namespace: fof-jack-demo-production
   syncPolicy:
     automated:
       prune: true
