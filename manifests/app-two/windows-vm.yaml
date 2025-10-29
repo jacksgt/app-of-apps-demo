@@ -86,14 +86,10 @@ spec:
             name: tablet
             type: tablet
           interfaces:
-          - name: vlan-60
-            bridge: {}
+          - name: pod
+            masquerade: {}
             model: e1000e
             state: up
-          # - name: pod
-          #   masquerade: {}
-          #   model: e1000e
-          #   state: up
 
           tpm:
             persistent: true
@@ -108,11 +104,8 @@ spec:
           guest: 4Gi
         resources: {}
       networks:
-      - name: vlan-60
-        multus:
-          networkName: vlan-60
-      # - name: pod
-      #   pod: {}
+      - name: pod
+        pod: {}
 
       volumes:
       - dataVolume:

@@ -58,10 +58,10 @@ spec:
             bridge: {}
             model: virtio
             state: up
-          # - name: pod
-          #   masquerade: {}
-          #   model: virtio
-          #   state: up
+          - name: pod
+            masquerade: {}
+            model: virtio
+            state: up
           rng: {}
         features:
           acpi: {}
@@ -79,8 +79,8 @@ spec:
       - name: vlan-60
         multus:
           networkName: vlan-60
-      # - name: pod
-      #   pod: {}
+      - name: pod
+        pod: {}
       terminationGracePeriodSeconds: 180
       volumes:
       - dataVolume:
