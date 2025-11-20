@@ -1,0 +1,113 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  labels:
+    app: win11-two
+    vm.kubevirt.io/template: windows2k25-server-medium
+    vm.kubevirt.io/template.namespace: openshift
+    vm.kubevirt.io/template.revision: "1"
+    vm.kubevirt.io/template.version: v0.34.0
+  name: win11-two
+  namespace: app-two
+spec:
+  dataVolumeTemplates:
+  - apiVersion: cdi.kubevirt.io/v1beta1
+    kind: DataVolume
+    metadata:
+      annotations:
+        cdi.kubevirt.io/storage.bind.immediate.requested: "true"
+      creationTimestamp: null
+      name: win11-two
+    spec:
+      source:
+        pvc:
+          name: win11-gold
+          namespace: openshift-virtualization-os-images
+      storage:
+        resources:
+          requests:
+            storage: 64Gi
+  runStrategy: RerunOnFailure
+  template:
+    metadata:
+      annotations:
+        vm.kubevirt.io/flavor: medium
+        vm.kubevirt.io/os: windows2k25
+        vm.kubevirt.io/workload: server
+      creationTimestamp: null
+      labels:
+        kubevirt.io/domain: win11-two
+        kubevirt.io/size: medium
+        network.kubevirt.io/headlessService: headless
+    spec:
+      architecture: amd64
+      domain:
+        clock:
+          timer:
+            hpet:
+              present: false
+            hyperv: {}
+            pit:
+              tickPolicy: delay
+            rtc:
+              tickPolicy: catchup
+          utc: {}
+        cpu:
+          cores: 2
+          sockets: 1
+          threads: 1
+        features:
+          acpi: {}
+          apic: {}
+          hyperv:
+            frequencies: {}
+            ipi: {}
+            reenlightenment: {}
+            relaxed: {}
+            reset: {}
+            runtime: {}
+            spinlocks:
+              spinlocks: 8191
+            synic: {}
+            synictimer:
+              direct: {}
+            tlbflush: {}
+            vapic: {}
+            vpindex: {}
+          smm: {}
+        devices:
+          disks:
+          - bootOrder: 2
+            disk:
+              bus: sata
+            name: rootdisk
+          inputs:
+          - bus: usb
+            name: tablet
+            type: tablet
+          interfaces:
+          - name: pod
+            masquerade: {}
+            model: e1000e
+            state: up
+
+          tpm:
+            persistent: true
+        firmware:
+          bootloader:
+            efi:
+              persistent: true
+              secureBoot: true
+        machine:
+          type: pc-q35-rhel9.6.0
+        memory:
+          guest: 4Gi
+        resources: {}
+      networks:
+      - name: pod
+        pod: {}
+
+      volumes:
+      - dataVolume:
+          name: win11-two
+        name: rootdisk
